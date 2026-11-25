@@ -6,6 +6,13 @@ All notable changes to this image are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and image tags track
 the upstream `strukturag/nextcloud-spreed-signaling` release version.
 
+## [2.2.0] - 2026-11-25
+
+### Changed
+
+- Rebuilt on Debian `13.8` (`debian:trixie-slim`) with nextcloud-spreed-signaling `v2.2.0`, go `1.27.4`.
+- Verified `0` fixable CRITICAL/HIGH vulnerabilities in Trivy and Grype.
+
 ## [2.2.0] - 2026-11-24
 
 ### Added
