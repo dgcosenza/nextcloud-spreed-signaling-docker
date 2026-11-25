@@ -1,0 +1,17 @@
+Debian 13 adaptation of strukturag/nextcloud-spreed-signaling docker/server/entrypoint.sh.
+
+Replaces Alpine `su-exec` with Debian `util-linux` `setpriv` when running as
+root, and executes the signaling server directly when already running as the
+unprivileged `spreedbackend` user (uid 850, the image default).
+
+--- a/docker/server/entrypoint.sh
++++ b/docker/server/entrypoint.sh
+@@ -341,4 +341,7 @@ if [ -n "$CA_CERTIFICATES_FOLDER" ]; then
+ fi
+ 
+ echo "Starting signaling server with $CONFIG ..."
+-exec su-exec spreedbackend /usr/bin/nextcloud-spreed-signaling -config "$CONFIG"
++if [ "$(id -u)" = "0" ]; then
++  exec /usr/bin/setpriv --reuid=spreedbackend --regid=spreedbackend --init-groups --no-new-privs -- /usr/bin/nextcloud-spreed-signaling -config "$CONFIG"
++fi
++exec /usr/bin/nextcloud-spreed-signaling -config "$CONFIG"

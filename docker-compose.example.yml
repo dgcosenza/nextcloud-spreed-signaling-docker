@@ -1,0 +1,38 @@
+# Production-style compose example for dgcosenza/nextcloud-spreed-signaling
+#
+# Pin production deployments by @sha256 digest and supply all keys/secrets via
+# a .env file or secrets manager (never commit secrets).
+
+services:
+  talk_signaling:
+    image: dgcosenza/nextcloud-spreed-signaling:latest
+    container_name: nextcloud_talk_signaling
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      HTTP_LISTEN: ":8080"
+      NATS_URL: "nats://loopback"
+      HASH_KEY: "${SIGNALING_HASH_KEY}"
+      BLOCK_KEY: "${SIGNALING_BLOCK_KEY}"
+      INTERNAL_SHARED_SECRET_KEY: "${SIGNALING_INTERNAL_SECRET}"
+      BACKENDS: "cloud"
+      BACKEND_CLOUD_URLS: "https://cloud.example.com"
+      BACKEND_CLOUD_SHARED_SECRET: "${SIGNALING_BACKEND_SECRET}"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8080/api/v1/welcome"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 128M
+    networks:
+      - nextcloud_internal
+
+networks:
+  nextcloud_internal:
+    internal: true

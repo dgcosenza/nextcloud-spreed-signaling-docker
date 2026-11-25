@@ -1,0 +1,25 @@
+# Changelog
+
+Maintained by Daniel G. Cosenza from FNX Labs.
+
+All notable changes to this image are documented here. The format follows
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and image tags track
+the upstream `strukturag/nextcloud-spreed-signaling` release version.
+
+## [2.2.0] - 2026-11-24
+
+### Added
+
+- Initial public build: `strukturag/nextcloud-spreed-signaling` `v2.2.0`
+  compiled from official Go source (`CGO_ENABLED=0`) on Debian 13 (trixie) slim.
+- Drop-in compatibility with `strukturag/nextcloud-spreed-signaling`: same
+  `CONFIG=/config/server.conf`, `/config/server.conf.in`, `/entrypoint.sh`,
+  `/stop.sh`, `/wait.sh`, `STOPSIGNAL SIGUSR1`, `spreedbackend` user
+  (`850:850`), all upstream environment variables, and `wget` healthcheck.
+- Minimal 1-hunk Debian entrypoint patch (`patches/0001-debian-setpriv.patch`)
+  replacing Alpine `su-exec` with Debian `setpriv`, running non-root by default
+  under `tini`.
+- Automated 7-step daily CI pipeline: upstream release and Go toolchain check,
+  clean `--no-cache` build, Trivy and Grype blocking gates, SPDX SBOM,
+  functional and negative smoke tests, Docker Hub publishing, automated
+  README/CHANGELOG sync, and failure alerting.
