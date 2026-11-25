@@ -1,62 +1,93 @@
-# Nextcloud Spreed Signaling Server for Debian 13 (trixie)
+# Nextcloud Spreed Signaling Server for Debian 13 (trixie-slim)
 
-[![Daily build, scan and publish](https://github.com/dgcosenza/nextcloud-spreed-signaling-docker/actions/workflows/daily.yml/badge.svg)](https://github.com/dgcosenza/nextcloud-spreed-signaling-docker/actions/workflows/daily.yml)
-[![Docker Hub pulls](https://img.shields.io/docker/pulls/dgcosenza/nextcloud-spreed-signaling.svg)](https://hub.docker.com/r/dgcosenza/nextcloud-spreed-signaling)
-[![Image size](https://img.shields.io/docker/image-size/dgcosenza/nextcloud-spreed-signaling/latest.svg)](https://hub.docker.com/r/dgcosenza/nextcloud-spreed-signaling)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Daily Nextcloud Spreed Signaling image](https://github.com/dgcosenza/nextcloud-spreed-signaling-docker/actions/workflows/daily.yml/badge.svg)](https://github.com/dgcosenza/nextcloud-spreed-signaling-docker/actions/workflows/daily.yml)
+[![Packaging License: MIT](https://img.shields.io/badge/packaging-MIT-blue.svg)](https://github.com/dgcosenza/nextcloud-spreed-signaling-docker/blob/main/LICENSE)
+[![Upstream License: AGPL-3.0-or-later](https://img.shields.io/badge/upstream-AGPL--3.0--or--later-green.svg)](https://github.com/strukturag/nextcloud-spreed-signaling/blob/master/LICENSE)
+[![Signed with Cosign](https://img.shields.io/badge/signed-cosign%20OIDC-blueviolet.svg)](#supply-chain-verification)
+[![SLSA Level 3](https://img.shields.io/badge/SLSA-Level%203-brightgreen.svg)](#supply-chain-verification)
+[![Architectures](https://img.shields.io/badge/arch-amd64%20%7C%20arm64-informational.svg)](#supported-architectures)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/dgcosenza/nextcloud-spreed-signaling-docker/badge)](https://scorecard.dev/viewer/?uri=github.com/dgcosenza/nextcloud-spreed-signaling-docker)
+[![Docker Pulls](https://img.shields.io/docker/pulls/dgcosenza/nextcloud-spreed-signaling)](https://hub.docker.com/r/dgcosenza/nextcloud-spreed-signaling)
+[![Docker Image Size](https://img.shields.io/docker/image-size/dgcosenza/nextcloud-spreed-signaling/latest)](https://hub.docker.com/r/dgcosenza/nextcloud-spreed-signaling)
+[![Latest Release](https://img.shields.io/github/v/release/dgcosenza/nextcloud-spreed-signaling-docker?label=version)](https://github.com/dgcosenza/nextcloud-spreed-signaling-docker/releases)
 
-A hardened, continuously rebuilt **Debian 13 (trixie)** container image of the
-[Nextcloud Talk High Performance Backend signaling server](https://github.com/strukturag/nextcloud-spreed-signaling)
-(`strukturag/nextcloud-spreed-signaling`), compiled from official Go source
-tags with the latest patched Go toolchain.
+A source-built, multi-arch, rootless **Debian 13 (`trixie-slim`)** container image of the [Nextcloud Talk High Performance Backend signaling server](https://github.com/strukturag/nextcloud-spreed-signaling) (`strukturag/nextcloud-spreed-signaling`), maintained by **Daniel G. Cosenza from FNX Labs**.
 
-It is a **drop-in replacement** for `strukturag/nextcloud-spreed-signaling`:
-same `CONFIG=/config/server.conf` path, same `/config/server.conf.in` template,
-same `/entrypoint.sh` environment variables, same `/stop.sh` / `/wait.sh`
-helpers and `STOPSIGNAL SIGUSR1`, same `spreedbackend` account (`850:850`), and
-same `wget` healthcheck — built on Debian 13 slim and running **non-root by
-default** under `tini`.
+- **Docker Hub:** [`dgcosenza/nextcloud-spreed-signaling`](https://hub.docker.com/r/dgcosenza/nextcloud-spreed-signaling)
+- **GitHub Container Registry (GHCR):** [`ghcr.io/dgcosenza/nextcloud-spreed-signaling`](https://github.com/dgcosenza/nextcloud-spreed-signaling-docker/pkgs/container/nextcloud-spreed-signaling) (identical signed multi-arch digest)
+- **Source Repository:** [`dgcosenza/nextcloud-spreed-signaling-docker`](https://github.com/dgcosenza/nextcloud-spreed-signaling-docker)
+- **Upstream Application:** [`strukturag/nextcloud-spreed-signaling`](https://github.com/strukturag/nextcloud-spreed-signaling) (`AGPL-3.0-or-later`)
 
-## Current versions
+---
+
+## Overview
+
+`dgcosenza/nextcloud-spreed-signaling` compiles official upstream Go release tags (`CGO_ENABLED=0`) with the latest Go toolchain on **Debian 13 (`trixie-slim`)** for both `linux/amd64` and `linux/arm64`:
+
+- **Drop-in replacement for `strukturag/nextcloud-spreed-signaling`:** Preserves `CONFIG=/config/server.conf`, `/config/server.conf.in`, `/entrypoint.sh`, `/stop.sh`, `/wait.sh`, `STOPSIGNAL SIGUSR1`, `spreedbackend` (`850:850`), all upstream environment variables, and the `wget` healthcheck.
+- **Rootless & read-only rootfs ready:** Defaults to `USER spreedbackend` (`850:850`) under `tini`, and is verified natively on both architectures under `--read-only --cap-drop ALL --security-opt no-new-privileges:true` (using `CONFIG=/tmp/server.conf` on `tmpfs`).
+- **Hardened supply chain:** Hadolint + Gitleaks preflight, native multi-arch smoke tests, strict Dive efficiency gate (`>= 95%`, `<= 5%` wasted), Syft SPDX + CycloneDX SBOMs, Trivy + Grype (SBOM) zero-fixable High/Critical gates, Cosign keyless OIDC signatures & SBOM attestations, SLSA Build L3 provenance, dual-registry publishing, and signed GitHub Releases.
+
+---
+
+## Current Versions
 
 <!-- versions:start -->
-
-| Component | Resolved version |
-|---|---|
-| Base OS | Debian `13.8` (`debian:trixie-slim`) |
-| `nextcloud-spreed-signaling` | `v2.2.0` |
-| `go` | `1.27.4` |
-| Last verified build | `2026-11-25` |
-| Fixable CRITICAL / HIGH CVEs | `0` (Trivy + Grype gate) |
-| Published digest | `dgcosenza/nextcloud-spreed-signaling@sha256:99a2771023c047b8ca1d68a9e4f77d9f0030981154cba3973ba70a542e7b5086` |
-
-Currently tracked unfixed upstream findings (no fix released): `CVE-2025-69720`, `CVE-2026-107494`, `CVE-2026-119373`, `CVE-2026-119374`, `CVE-2026-119379`, `CVE-2026-124709`, `CVE-2026-16742`, `CVE-2026-54369`, `CVE-2026-58471`, `CVE-2026-58472`.
-
+| Component | Resolved Version |
+| --- | --- |
+| nextcloud-spreed-signaling | `v2.2.0` |
+| Go toolchain | `1.27.4` |
+| Base OS | `Debian 13.8 (trixie-slim)` |
+| Architectures | `linux/amd64, linux/arm64` |
+| Last verified build (UTC) | `2026-11-25` |
+| Supply chain | Cosign OIDC signed + SPDX & CycloneDX SBOM attestations + SLSA Build L3 provenance |
+| Security gate (Trivy + Grype on SBOM) | **0 fixable Critical/High** |
 <!-- versions:end -->
 
-## Supported tags
+---
 
-| Tag | Meaning |
-|---|---|
-| `latest` | Newest successfully built, tested, and scanned image |
-| `<version>` | Upstream signaling release, e.g. `2.2.0` (moves on daily rebuilds of that release) |
-| `<version>-<YYYYMMDD>` | Immutable date-stamped build of that release |
-| `sha-<short>` | Immutable build of a specific repository commit |
+## Supported Tags & Tag Policy
 
-Pin production deployments by digest:
+Identical multi-arch OCI digests are published to **Docker Hub** (`dgcosenza/nextcloud-spreed-signaling`) and **GHCR** (`ghcr.io/dgcosenza/nextcloud-spreed-signaling`), accompanied by an automated signed [GitHub Release](https://github.com/dgcosenza/nextcloud-spreed-signaling-docker/releases):
 
-```bash
-docker pull dgcosenza/nextcloud-spreed-signaling:latest
-docker inspect --format='{{index .RepoDigests 0}}' dgcosenza/nextcloud-spreed-signaling:latest
-# image: dgcosenza/nextcloud-spreed-signaling@sha256:...
+| Tag | Policy | Description |
+| --- | --- | --- |
+| `<version>-<YYYYMMDD>` (e.g. `2.2.0-20261125`) | **Immutable** | Date-stamped daily rebuild pinning the signaling release and UTC build date. |
+| `sha-<short>` | **Immutable** | Packaging repository Git commit tag. |
+| `<version>` (e.g. `2.2.0`) | Moving | Latest verified Debian 13 + Go security rebuild of that signaling release. |
+| `latest` | Moving | Latest verified build tracking the newest official signaling release. |
+
+**Production pinning:** Pin by immutable digest:
+
+```yaml
+image: dgcosenza/nextcloud-spreed-signaling:2.2.0@sha256:<digest>
+# or via GitHub Container Registry (identical digest):
+image: ghcr.io/dgcosenza/nextcloud-spreed-signaling:2.2.0@sha256:<digest>
 ```
 
-## Quick start
+---
+
+## Supported Architectures
+
+| Architecture | Status | Verification |
+| --- | --- | --- |
+| `linux/amd64` | **Published & natively tested** | Built with latest Go `trixie` toolchain, smoke-tested (both default and `--read-only --cap-drop ALL`), Dive-gated, Syft/Trivy/Grype-scanned, and Cosign-signed on native x86_64 CI runners. |
+| `linux/arm64` | **Published & natively tested** | Built with latest Go `trixie` toolchain, smoke-tested (both default and `--read-only --cap-drop ALL`), Dive-gated, Syft/Trivy/Grype-scanned, and Cosign-signed on native ARM64 CI runners. |
+
+---
+
+## Quick Start
+
+### `docker run` (hardened, rootless, read-only)
 
 ```bash
 docker run -d --name nextcloud_talk_signaling \
   --restart unless-stopped \
+  --read-only \
+  --cap-drop ALL \
   --security-opt no-new-privileges:true \
+  --tmpfs /tmp:noexec,nosuid,size=16m \
+  -e CONFIG=/tmp/server.conf \
   -e HTTP_LISTEN=:8080 \
   -e NATS_URL=nats://loopback \
   -e HASH_KEY="$(openssl rand -hex 16)" \
@@ -74,176 +105,176 @@ Verify the welcome endpoint:
 docker exec nextcloud_talk_signaling wget -q -O - http://127.0.0.1:8080/api/v1/welcome
 ```
 
-## Compose example
+### Hardened Docker Compose
 
-See [docker-compose.example.yml](docker-compose.example.yml) for a complete
-compose definition running on an internal Docker network with secret injection
-via environment substitution, `no-new-privileges:true`, and resource limits.
+See [`docker-compose.example.yml`](https://github.com/dgcosenza/nextcloud-spreed-signaling-docker/blob/main/docker-compose.example.yml) for a hardened compose definition running rootless with `read_only: true`, `cap_drop: [ALL]`, `no-new-privileges:true`, `/tmp` `tmpfs`, and an internal network.
+
+---
 
 ## Configuration
 
-### Ports
+### Ports & Paths
 
-| Port | Protocol | Purpose |
-|---|---|---|
-| `8080` | TCP | Default HTTP signaling and WebSocket API (`HTTP_LISTEN`) |
-| `8443` | TCP | Optional HTTPS listener (`HTTPS_LISTEN`, when TLS is terminated inside the container) |
-| `9090` | TCP | Optional gRPC listener (`GRPC_LISTEN`) |
+| Resource | Details | Purpose |
+| --- | --- | --- |
+| `8080/tcp` | Default HTTP/WS | Signaling API (`HTTP_LISTEN`) |
+| `8443/tcp` | Optional TLS | Direct HTTPS listener (`HTTPS_LISTEN`) |
+| `9090/tcp` | Optional gRPC | gRPC listener (`GRPC_LISTEN`) |
+| `/config/server.conf` | Generated or mounted `:ro` | Runtime INI config (set `CONFIG=/tmp/server.conf` for read-only rootfs) |
+| `/etc/ssl/certs/ca-certificates.crt` | Read-only | Debian CA trust bundle |
 
-### Volumes and paths
-
-| Path | Purpose |
-|---|---|
-| `/config/server.conf` | Generated automatically from `/config/server.conf.in` + environment variables on first start, or mount your own pre-built `server.conf` read-only |
-| `/etc/ssl/certs/ca-certificates.crt` | Debian CA trust bundle (override via read-only bind mount or `CA_CERTIFICATES_FOLDER`) |
-
-### Environment variables
-
-All environment variables handled by upstream `docker/server/entrypoint.sh` are
-supported verbatim:
+### Environment Variables
 
 | Variable | Default | Description |
-|---|---|---|
-| `CONFIG` | `/config/server.conf` | Path to the signaling server configuration file |
-| `HTTP_LISTEN` | *(commented in template)* | HTTP bind address, e.g. `:8080` |
-| `NATS_URL` | `nats://loopback` | NATS server URL (`nats://loopback` uses the built-in in-process hub) |
-| `HASH_KEY` | *(required)* | Session checksum key (32 or 64 bytes recommended) |
-| `BLOCK_KEY` | *(required)* | AES block encryption key (16, 24, or 32 bytes) |
+| --- | --- | --- |
+| `CONFIG` | `/config/server.conf` | Signaling configuration file path (`CONFIG=/tmp/server.conf` enables `read_only: true`) |
+| `HTTP_LISTEN` | *(commented)* | HTTP bind address, e.g. `:8080` |
+| `NATS_URL` | `nats://loopback` | NATS hub URL (`nats://loopback` uses built-in in-process hub) |
+| `HASH_KEY` / `BLOCK_KEY` | *(required)* | Session checksum and AES block encryption keys |
 | `INTERNAL_SHARED_SECRET_KEY` | *(required)* | Shared secret for internal clients |
 | `BACKENDS` | *(unset)* | Space-separated backend identifiers, e.g. `cloud` |
-| `BACKEND_<NAME>_URLS` | *(unset)* | Comma-separated Nextcloud base URLs for backend `<NAME>` |
+| `BACKEND_<NAME>_URLS` | *(unset)* | Comma-separated Nextcloud URLs for backend `<NAME>` |
 | `BACKEND_<NAME>_SHARED_SECRET` | *(unset)* | Shared secret matching Nextcloud Talk settings |
-| `SKIP_VERIFY` | *(unset)* | Set `true` to skip TLS verification when connecting to backends |
+| `SKIP_VERIFY` | *(unset)* | Set `true` to skip backend TLS verification |
 | `USE_JANUS` / `JANUS_URL` | *(unset)* | Optional Janus WebRTC gateway integration |
 | `TURN_API_KEY` / `TURN_SECRET` / `TURN_SERVERS` | *(unset)* | Optional TURN relay configuration |
 | `TRUSTED_PROXIES` / `STATS_IPS` | *(unset)* | Reverse proxy and stats ACL CIDRs |
-| `CA_CERTIFICATES_FOLDER` | *(unset)* | Directory of extra `.crt` files to import at startup (requires starting container with `--user 0`; entrypoint then drops to `spreedbackend` via `setpriv`) |
+| `CA_CERTIFICATES_FOLDER` | *(unset)* | Extra `.crt` folder imported at start (requires `--user 0`; drops to `850:850` via `setpriv`) |
 | `TZ` | `UTC` | Timezone for log timestamps |
 
 ### UID / GID
 
-The image runs by default as the unprivileged `spreedbackend` user (`uid=850`,
-`gid=850`), matching upstream's UID/GID. `/config` is owned by `850:850` so
-`/entrypoint.sh` can generate `/config/server.conf` without root privileges.
-If `CA_CERTIFICATES_FOLDER` is set so `update-ca-certificates` must run at
-startup, start with `--user 0`; the entrypoint updates the CA store and then
-drops privileges via `setpriv --reuid=spreedbackend --regid=spreedbackend --no-new-privs`.
+Runs by default as non-root `spreedbackend` (`850:850`).
+
+---
 
 ## Healthcheck
 
-```text
-wget -q -O /dev/null http://127.0.0.1:8080/api/v1/welcome
+```dockerfile
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD ["wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/api/v1/welcome"]
 ```
 
-Exercises the HTTP application layer (not merely a TCP port open check) every
-30 s (10 s timeout, 30 s start period, 3 retries) and fails closed if the
-signaling process stops.
+Probes the HTTP signaling layer directly and fails closed if the signaling process stops.
 
-## Upgrading and migrating from `strukturag/nextcloud-spreed-signaling`
+---
 
-1. Back up any custom `/config/server.conf` (or `.env` file defining
-   `HASH_KEY`, `BLOCK_KEY`, `INTERNAL_SHARED_SECRET_KEY`, and
-   `BACKEND_*_SHARED_SECRET`).
-2. Replace `strukturag/nextcloud-spreed-signaling:latest` with
-   `dgcosenza/nextcloud-spreed-signaling:<version>@sha256:<digest>`.
-3. Recreate only the signaling service (`docker compose up -d talk_signaling`).
-4. Confirm `healthy` status and verify `/api/v1/welcome` returns HTTP 200.
+## Upgrading and Migrating from `strukturag/nextcloud-spreed-signaling`
 
-Rollback is immediate: restore the previous image digest in your compose file
-and run `docker compose up -d talk_signaling`.
+1. Back up any custom `/config/server.conf` and `.env` secrets.
+2. Replace `strukturag/nextcloud-spreed-signaling:latest` with `dgcosenza/nextcloud-spreed-signaling:<version>@sha256:<digest>` (or `ghcr.io/dgcosenza/nextcloud-spreed-signaling:<version>@sha256:<digest>`).
+3. Recreate only the signaling service (`docker compose up -d talk_signaling`) and confirm `healthy` plus `/api/v1/welcome` HTTP `200`.
+
+---
+
+## Supply-Chain Verification
+
+Every published digest (multi-arch index and per-architecture manifests) on both Docker Hub and GHCR is keyless-signed with **Sigstore Cosign** (GitHub OIDC), attested with **SPDX** and **CycloneDX** SBOMs, and backed by **SLSA Build L3** provenance (`actions/attest-build-provenance`).
+
+### Verify image signature with Cosign
+
+```bash
+cosign verify \
+  --certificate-identity-regexp="^https://github\.com/dgcosenza/nextcloud-spreed-signaling-docker/\.github/workflows/daily\.yml@refs/heads/main$" \
+  --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
+  ghcr.io/dgcosenza/nextcloud-spreed-signaling:latest
+
+# Or against Docker Hub (identical digest):
+cosign verify \
+  --certificate-identity-regexp="^https://github\.com/dgcosenza/nextcloud-spreed-signaling-docker/\.github/workflows/daily\.yml@refs/heads/main$" \
+  --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
+  dgcosenza/nextcloud-spreed-signaling:latest
+```
+
+### Verify SPDX / CycloneDX SBOM attestations
+
+```bash
+cosign verify-attestation \
+  --type spdxjson \
+  --certificate-identity-regexp="^https://github\.com/dgcosenza/nextcloud-spreed-signaling-docker/\.github/workflows/daily\.yml@refs/heads/main$" \
+  --certificate-oidc-issuer="https://token.actions.githubusercontent.com" \
+  ghcr.io/dgcosenza/nextcloud-spreed-signaling@sha256:<arch-digest>
+```
+
+### Verify SLSA Build Provenance
+
+```bash
+gh attestation verify oci://ghcr.io/dgcosenza/nextcloud-spreed-signaling:latest --owner dgcosenza
+```
+
+---
 
 ## Security
 
-* **Base OS:** `debian:trixie-slim`, fully upgraded (`apt-get upgrade`) on
-  every build with `--no-install-recommends` and cleaned APT lists.
-* **Patched Go builds:** Compiled daily from the official upstream Git tag with
-  `CGO_ENABLED=0` and the newest Go toolchain published on Debian 13.
-* **Non-root default & minimal patch:** Runs as `spreedbackend` (`850:850`)
-  under `tini` with `no-new-privileges:true` supported; the only entrypoint
-  delta (`patches/0001-debian-setpriv.patch`) replaces Alpine `su-exec` with
-  Debian `setpriv`.
-* **Scan policy:** Every build must pass **Trivy** (`--ignore-unfixed`,
-  `CRITICAL,HIGH`, scanning both OS packages and the Go binary) and **Grype**
-  (`--only-fixed`, severity `high`) with **0 fixable CRITICAL or HIGH**
-  vulnerabilities. Reports and a Syft SPDX SBOM are archived for 90 days; Trivy
-  SARIF is uploaded to GitHub code scanning.
-* **Current status:** see the CI badge above and "Current versions".
+- **Preflight gates:** Every push and PR runs **Hadolint** (blocking on warning+), **Gitleaks** secret scanning across git history, and **public-content/attribution/license** checks.
+- **Patched Go builds:** Compiled daily from official upstream tags with `CGO_ENABLED=0` and the newest Go `trixie` toolchain (`GOTOOLCHAIN=local`).
+- **Rootless & read-only ready:** Defaults to `spreedbackend` (`850:850`) under `tini`, verified with `--read-only --cap-drop ALL --security-opt no-new-privileges:true`.
+- **Vulnerability & efficiency gates:** Each architecture generates **Syft** SPDX + CycloneDX SBOMs, passes a strict **Dive** efficiency gate (`>= 95%`, `<= 5%` wasted), and must pass **Trivy** (table, JSON, SARIF to Code Scanning, blocking `--ignore-unfixed`) and **Grype** scanning the SPDX SBOM (`--only-fixed --fail-on high`) with **0 fixable Critical/High** vulnerabilities.
+- **Dependency automation:** Renovate (`renovate.json`) pins base image digests and GitHub Action commit SHAs; Dependabot security alerts and OpenSSF Scorecard monitoring are enabled.
+- See [`SECURITY.md`](https://github.com/dgcosenza/nextcloud-spreed-signaling-docker/blob/main/SECURITY.md) for vulnerability reporting.
 
-## Building locally
+---
+
+## Build Locally
 
 ```bash
 git clone https://github.com/dgcosenza/nextcloud-spreed-signaling-docker.git
 cd nextcloud-spreed-signaling-docker
-docker build -t dgcosenza/nextcloud-spreed-signaling:dev .
-./tests/smoke.sh dgcosenza/nextcloud-spreed-signaling:dev
+
+docker buildx build \
+  --platform linux/amd64 \
+  --load \
+  --build-arg IMAGE_CREATED="$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+  --build-arg IMAGE_REVISION="$(git rev-parse HEAD)" \
+  -t dgcosenza/nextcloud-spreed-signaling:local \
+  .
+
+./tests/smoke.sh dgcosenza/nextcloud-spreed-signaling:local
 ```
 
-Build arguments:
+| Build Arg | Default | Purpose |
+| --- | --- | --- |
+| `GO_BASE` | `golang:1.27.4-trixie@sha256:...` | Digest-pinned official Go builder image (refreshed daily by CI) |
+| `DEBIAN_BASE` | `debian:trixie-slim@sha256:...` | Digest-pinned Debian 13 runtime base image (refreshed daily by CI) |
+| `GO_VERSION` | `1.27.4` | Go toolchain version metadata |
+| `SIGNALING_VERSION` | `v2.2.0` | `strukturag/nextcloud-spreed-signaling` Git tag |
+| `SIGNALING_UID` / `SIGNALING_GID` | `850` / `850` | Unprivileged `spreedbackend` account IDs |
 
-| Argument | Default | Purpose |
-|---|---|---|
-| `DEBIAN_VERSION` | `trixie-slim` | Debian 13 base tag |
-| `GO_VERSION` | tracked release | Official `golang:<ver>-trixie` builder toolchain |
-| `SIGNALING_VERSION` | tracked release | `strukturag/nextcloud-spreed-signaling` Git tag |
-| `SIGNALING_UID` / `SIGNALING_GID` | `850` / `850` | Unprivileged `spreedbackend` user/group IDs |
-| `IMAGE_CREATED`, `IMAGE_REVISION`, `IMAGE_SOURCE` | empty / repo | OCI image metadata |
+---
 
-## Update policy
+## Update Policy
 
-A GitHub Actions workflow (`.github/workflows/daily.yml`) runs **daily** (and on
-every push to `main`, on pull requests, and on demand via `workflow_dispatch`),
-gated first by `.github/workflows/public-check.yml`:
+[`.github/workflows/daily.yml`](https://github.com/dgcosenza/nextcloud-spreed-signaling-docker/blob/main/.github/workflows/daily.yml) runs automatically every day at **05:40 UTC**, on pushes to `main`, on pull requests (verification only), and via `workflow_dispatch`:
 
-1. **Upstream check:** resolves the latest `strukturag/nextcloud-spreed-signaling`
-   release via the authenticated GitHub API (`GH_TOKEN`) and the newest Go
-   `trixie` release from Docker Hub, diffs against `versions.json`, and fetches
-   upstream release notes for new releases.
-2. **Clean rebuild:** compiles a static Go binary (`CGO_ENABLED=0`) and builds
-   the Debian 13 slim runtime with `apt-get upgrade` and `--no-cache` on
-   scheduled runs.
-3. **Vulnerability fix and gate:** scans OS packages and Go modules with
-   **Trivy** (table, JSON, SARIF to GitHub code scanning) and **Grype**; fails
-   on any fixable **CRITICAL** or **HIGH** vulnerability, retains reports and
-   an SPDX SBOM (Syft) for 90 days, and diffs findings against the prior build.
-4. **Smoke test:** boots the container with environment-driven config, waits
-   for `healthy`, verifies uid `850` execution and `/api/v1/welcome` JSON, and
-   asserts graceful `/stop.sh` (`SIGUSR1`) shutdown causes healthcheck failure.
-5. **Publish:** on non-PR runs with Docker Hub credentials configured, pushes
-   `latest`, `<version>`, `<version>-<YYYYMMDD>` (immutable), and `sha-<short>`,
-   recording the published digest.
-6. **Automated documentation sync:** when versions, base OS, digest, or CVE
-   status change, commits updated `versions.json`, the README "Current
-   versions" block, and a dated `CHANGELOG.md` entry (`[skip ci]`), then syncs
-   the README and short description to Docker Hub.
-7. **Alerting:** on failure of any job on a scheduled or `main` run, opens or
-   updates a single GitHub issue labeled `ci-failure` with the failing job and
-   run link, and closes it automatically on the next green run.
+1. **Preflight & upstream check:** Runs public-content checks, **Hadolint**, and **Gitleaks**; resolves the latest `strukturag/nextcloud-spreed-signaling` release via authenticated GitHub API plus latest Go `trixie` and `debian:trixie-slim` digests; diffs against `versions.json` and emits `upstream-changes.md`.
+2. **Multi-arch no-cache rebuild:** Compiles static Go binaries natively on `linux/amd64` and `linux/arm64` runners with `--no-cache` on schedule and full Debian 13 `apt-get upgrade`.
+3. **Smoke, Dive & vulnerability gates:** Runs [`tests/smoke.sh`](https://github.com/dgcosenza/nextcloud-spreed-signaling-docker/blob/main/tests/smoke.sh) natively on both architectures (default + `--read-only --cap-drop ALL`, `/api/v1/welcome`, graceful `/stop.sh` `SIGUSR1`), enforces the strict **Dive** efficiency gate (`>= 95%`, `<= 5%` wasted), generates **Syft** SPDX + CycloneDX SBOMs, and gates publication on **0 fixable Critical/High** in both **Trivy** and **Grype** (SBOM scan).
+4. **Dual-registry publish & signing:** Assembles the multi-arch OCI index on **GHCR** (`ghcr.io/dgcosenza/nextcloud-spreed-signaling`) and mirrors the identical digest to **Docker Hub** (`dgcosenza/nextcloud-spreed-signaling`) with tags `latest`, `<version>`, `<version>-<YYYYMMDD>`, and `sha-<short>`; keyless-signs digests and attaches SPDX/CycloneDX SBOM attestations via **Cosign** OIDC; emits **SLSA Build L3** provenance; and publishes a signed **GitHub Release**.
+5. **Automated documentation sync:** Commits updated `versions.json`, the README `Current Versions` block, and a dated `CHANGELOG.md` entry via `github-actions[bot]` (`[skip ci]`), then syncs the Docker Hub overview and short description.
+6. **Failure alerting:** Opens or updates a single GitHub issue labeled `ci-failure` on any `main` or scheduled failure, and closes it automatically on the next green run.
 
-## Design decisions
+---
 
-* **Debian 13 slim instead of Alpine.** Aligns OS packages, CA bundle
-  management, and daily security patching with Debian 13 while preserving 100%
-  entrypoint, helper script (`/stop.sh`, `/wait.sh`), and `wget` healthcheck
-  compatibility.
-* **Upstream entrypoint patched cleanly.** Rather than reimplementing the 340-line
-  environment-to-INI generator, `docker/server/entrypoint.sh` is fetched from
-  the tagged upstream release and adapted with a 1-hunk `setpriv` patch.
-* **`tini` as PID 1 with `STOPSIGNAL SIGUSR1`.** Preserves upstream's graceful
-  call-draining shutdown behavior while adding clean signal forwarding and
-  zombie reaping.
+## Design Decisions
+
+- **Debian 13 (`trixie-slim`) instead of Alpine:** Aligns OS packages, CA bundle handling, and daily security updates with Debian 13 while preserving upstream `/entrypoint.sh`, `/stop.sh`, `/wait.sh`, and `STOPSIGNAL SIGUSR1` via a one-hunk `setpriv` patch (`patches/0001-debian-setpriv.patch`).
+- **Two-layer zero-waste runtime layout:** Upgrading Debian 13 inside an `os-base` stage and assembling the final image with cleanly separated OS and compiled-binary layers eliminates overwritten base-layer files so Dive stays at ~100% efficiency and ~0% wasted space across daily security rebuilds.
+- **Hadolint `DL3008` ignore:** Daily `--no-cache` security rebuilds intentionally pull the newest Debian 13 security updates via `apt-get` rather than pinning stale package versions.
+
+---
 
 ## License
 
-The packaging, patch, workflow, and documentation in this repository are
-licensed under the **MIT License** (see [LICENSE](LICENSE)).
+This repository follows a clear packaging-vs-upstream license split:
 
-`strukturag/nextcloud-spreed-signaling` is licensed under the **GNU Affero
-General Public License v3 or later (`AGPL-3.0-or-later`)**; upstream notices
-are preserved in `/usr/share/doc/signaling-notices/LICENSE` and documented in
-[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
+- **Container packaging, patch, CI workflows, scripts, and documentation (`packaging: MIT`):** Licensed under the [MIT License](https://github.com/dgcosenza/nextcloud-spreed-signaling-docker/blob/main/LICENSE) — copyright **Daniel G. Cosenza from FNX Labs**.
+- **Bundled upstream software — `strukturag/nextcloud-spreed-signaling` (`upstream: AGPL-3.0-or-later`):** Copyright struktur AG and contributors — licensed under the [GNU Affero General Public License v3 or later (`AGPL-3.0-or-later`)](https://github.com/strukturag/nextcloud-spreed-signaling/blob/master/LICENSE).
+
+Full notices are preserved inside the image (`/usr/share/doc/signaling-notices/LICENSE`) and in [`THIRD-PARTY-NOTICES.md`](https://github.com/dgcosenza/nextcloud-spreed-signaling-docker/blob/main/THIRD-PARTY-NOTICES.md).
+
+---
 
 ## Credits
 
-* [struktur AG — nextcloud-spreed-signaling](https://github.com/strukturag/nextcloud-spreed-signaling) —
-  standalone signaling server for Nextcloud Talk
-* Container packaging, CI, and documentation: maintained by Daniel G. Cosenza from FNX Labs ([dgcosenza](https://github.com/dgcosenza))
+- [struktur AG — nextcloud-spreed-signaling](https://github.com/strukturag/nextcloud-spreed-signaling)
+- Container packaging, CI, and documentation: maintained by **Daniel G. Cosenza from FNX Labs** ([dgcosenza](https://github.com/dgcosenza))

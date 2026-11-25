@@ -1,16 +1,24 @@
-# Production-style compose example for dgcosenza/nextcloud-spreed-signaling
+# Hardened rootless + read-only compose example for dgcosenza/nextcloud-spreed-signaling
 #
 # Pin production deployments by @sha256 digest and supply all keys/secrets via
-# a .env file or secrets manager (never commit secrets).
+# a .env file or secrets manager (never commit secrets). Runs as non-root
+# `spreedbackend` (850:850) with a read-only root filesystem and all Linux
+# capabilities dropped by writing the generated config to /tmp/server.conf.
 
 services:
   talk_signaling:
     image: dgcosenza/nextcloud-spreed-signaling:latest
     container_name: nextcloud_talk_signaling
     restart: unless-stopped
+    read_only: true
+    cap_drop:
+      - ALL
     security_opt:
       - no-new-privileges:true
+    tmpfs:
+      - /tmp:noexec,nosuid,size=16m
     environment:
+      CONFIG: "/tmp/server.conf"
       HTTP_LISTEN: ":8080"
       NATS_URL: "nats://loopback"
       HASH_KEY: "${SIGNALING_HASH_KEY}"
