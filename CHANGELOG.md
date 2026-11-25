@@ -12,7 +12,7 @@ the upstream `strukturag/nextcloud-spreed-signaling` release version.
 
 - Rebuilt on Debian `13.8` (`debian:trixie-slim`) with nextcloud-spreed-signaling `v2.2.0`, go `1.27.4`.
 - Verified `0` fixable CRITICAL/HIGH vulnerabilities in Trivy and Grype.
-
+- Published digest: `dgcosenza/nextcloud-spreed-signaling@sha256:99a2771023c047b8ca1d68a9e4f77d9f0030981154cba3973ba70a542e7b5086`.
 ## [2.2.0] - 2026-11-24
 
 ### Added

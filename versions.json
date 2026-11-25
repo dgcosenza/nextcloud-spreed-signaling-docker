@@ -7,7 +7,7 @@
     "go": "1.27.4"
   },
   "last_build_date": "2026-11-25",
-  "last_digest": "",
+  "last_digest": "dgcosenza/nextcloud-spreed-signaling@sha256:99a2771023c047b8ca1d68a9e4f77d9f0030981154cba3973ba70a542e7b5086",
   "unfixed_high_critical": [
     "CVE-2025-69720",
     "CVE-2026-107494",
