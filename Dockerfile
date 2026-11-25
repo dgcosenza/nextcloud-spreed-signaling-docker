@@ -82,6 +82,7 @@ ARG IMAGE_CREATED
 ARG IMAGE_REVISION
 ARG IMAGE_SOURCE
 
+# hadolint ignore=DL3067
 COPY --from=os-base / /
 COPY --from=builder /workdir/bin/signaling /usr/bin/nextcloud-spreed-signaling
 COPY --from=builder --chown=850:850 /workdir/server.conf.in /config/server.conf.in

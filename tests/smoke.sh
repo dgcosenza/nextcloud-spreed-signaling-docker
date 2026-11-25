@@ -14,6 +14,12 @@ IMAGE="${1:-${IMAGE:-dgcosenza/nextcloud-spreed-signaling:latest}}"
 NAME="${NAME:-signaling-smoke}"
 NAME_RO="${NAME_RO:-signaling-smoke-ro}"
 
+# Generate ephemeral throwaway keys at runtime for CI smoke testing.
+SMOKE_HASH_KEY="$(od -An -N16 -tx1 /dev/urandom | tr -d ' \n')"
+SMOKE_BLOCK_KEY="$(od -An -N8 -tx1 /dev/urandom | tr -d ' \n')"
+SMOKE_INT_KEY="$(od -An -N16 -tx1 /dev/urandom | tr -d ' \n')"
+SMOKE_BACKEND_KEY="$(od -An -N16 -tx1 /dev/urandom | tr -d ' \n')"
+
 cleanup() {
   docker rm -f "$NAME" "$NAME_RO" >/dev/null 2>&1 || true
 }
@@ -25,12 +31,12 @@ docker run -d --name "$NAME" \
   --security-opt no-new-privileges:true \
   -e HTTP_LISTEN=:8080 \
   -e NATS_URL=nats://loopback \
-  -e HASH_KEY=0123456789abcdef0123456789abcdef \
-  -e BLOCK_KEY=0123456789abcdef \
-  -e INTERNAL_SHARED_SECRET_KEY=ci-smoke-internal-secret \
+  -e "HASH_KEY=${SMOKE_HASH_KEY}" \
+  -e "BLOCK_KEY=${SMOKE_BLOCK_KEY}" \
+  -e "INTERNAL_SHARED_SECRET_KEY=${SMOKE_INT_KEY}" \
   -e BACKENDS=cloud \
   -e BACKEND_CLOUD_URLS=https://example.invalid \
-  -e BACKEND_CLOUD_SHARED_SECRET=ci-smoke-backend-secret \
+  -e "BACKEND_CLOUD_SHARED_SECRET=${SMOKE_BACKEND_KEY}" \
   "$IMAGE"
 
 for _ in $(seq 1 45); do
@@ -59,12 +65,12 @@ docker run -d --name "$NAME_RO" \
   -e CONFIG=/tmp/server.conf \
   -e HTTP_LISTEN=:8080 \
   -e NATS_URL=nats://loopback \
-  -e HASH_KEY=0123456789abcdef0123456789abcdef \
-  -e BLOCK_KEY=0123456789abcdef \
-  -e INTERNAL_SHARED_SECRET_KEY=ci-smoke-internal-secret \
+  -e "HASH_KEY=${SMOKE_HASH_KEY}" \
+  -e "BLOCK_KEY=${SMOKE_BLOCK_KEY}" \
+  -e "INTERNAL_SHARED_SECRET_KEY=${SMOKE_INT_KEY}" \
   -e BACKENDS=cloud \
   -e BACKEND_CLOUD_URLS=https://example.invalid \
-  -e BACKEND_CLOUD_SHARED_SECRET=ci-smoke-backend-secret \
+  -e "BACKEND_CLOUD_SHARED_SECRET=${SMOKE_BACKEND_KEY}" \
   "$IMAGE"
 
 for _ in $(seq 1 45); do

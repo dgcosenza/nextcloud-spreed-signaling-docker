@@ -1,0 +1,7 @@
+# Documented false positives: sequential hex smoke-test placeholders
+# (0123456789abcdef...) in earlier commits of tests/smoke.sh.
+# Current tests/smoke.sh generates ephemeral keys at runtime.
+6dd9c63064e98ff6a6d95e806f950c35c065f337:tests/smoke.sh:generic-api-key:62
+6dd9c63064e98ff6a6d95e806f950c35c065f337:tests/smoke.sh:generic-api-key:63
+972523e5ee878ae2971f553af8790f2917969ce3:tests/smoke.sh:generic-api-key:24
+972523e5ee878ae2971f553af8790f2917969ce3:tests/smoke.sh:generic-api-key:25
