@@ -13,8 +13,7 @@ the upstream `strukturag/nextcloud-spreed-signaling` release version.
 - Architectures verified: `linux/amd64, linux/arm64` (native smoke tests + Dive efficiency gate).
 - Upstream status: refreshed base OS, dependencies, and supply-chain attestations.
 - Vulnerability gate: **0 fixable Critical/High** in Trivy and Grype (SBOM scan) (15 upstream-unfixed).
-- Published multi-arch digest (Docker Hub + GHCR): `dgcosenza/nextcloud-spreed-signaling@sha256:9ce2800e1cea6b0ce15138714214668b59664192d047841bdf8d23924c5faf49` (Cosign OIDC signed + SPDX/CycloneDX SBOM + SLSA L3 provenance).
-
+- Published multi-arch digest (Docker Hub + GHCR): `dgcosenza/nextcloud-spreed-signaling@sha256:aa8d71de5ec206c5efc51986dda8fe12387f035612b5e98cf9e40c406f352f3a` (Cosign OIDC signed + SPDX/CycloneDX SBOM + SLSA L3 provenance).
 ## [2.2.0] - 2026-11-25
 
 ### Changed
