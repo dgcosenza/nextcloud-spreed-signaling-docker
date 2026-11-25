@@ -29,8 +29,8 @@ ARG IMAGE_SOURCE="https://github.com/dgcosenza/nextcloud-spreed-signaling-docker
 FROM ${GO_BASE} AS builder
 
 ARG SIGNALING_VERSION
-ARG TARGETOS=linux
-ARG TARGETARCH=amd64
+ARG TARGETOS
+ARG TARGETARCH
 
 ENV DEBIAN_FRONTEND=noninteractive \
     GOTOOLCHAIN=local
@@ -46,7 +46,7 @@ RUN git clone --depth 1 --branch "${SIGNALING_VERSION}" \
         https://github.com/strukturag/nextcloud-spreed-signaling.git . \
     && patch -p1 < /tmp/0001-debian-setpriv.patch \
     && touch /.dockerenv \
-    && CGO_ENABLED=0 GOOS="${TARGETOS}" GOARCH="${TARGETARCH}" make server
+    && CGO_ENABLED=0 GOOS="${TARGETOS:-linux}" GOARCH="${TARGETARCH:-amd64}" make server
 
 # ---- Stage 2: fully upgraded Debian 13 runtime OS layer --------------------
 FROM ${DEBIAN_BASE} AS os-base
