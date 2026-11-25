@@ -8,6 +8,15 @@ the upstream `strukturag/nextcloud-spreed-signaling` release version.
 
 ## [2.2.0] - 2026-11-25
 
+### Automated Daily Build
+- Verified components: nextcloud-spreed-signaling `v2.2.0`, Go toolchain `1.27.4`, Base OS `Debian 13.8 (trixie-slim)`.
+- Architectures verified: `linux/amd64, linux/arm64` (native smoke tests + Dive efficiency gate).
+- Upstream status: refreshed base OS, dependencies, and supply-chain attestations.
+- Vulnerability gate: **0 fixable Critical/High** in Trivy and Grype (SBOM scan) (15 upstream-unfixed).
+- Published multi-arch digest (Docker Hub + GHCR): `dgcosenza/nextcloud-spreed-signaling@sha256:9ce2800e1cea6b0ce15138714214668b59664192d047841bdf8d23924c5faf49` (Cosign OIDC signed + SPDX/CycloneDX SBOM + SLSA L3 provenance).
+
+## [2.2.0] - 2026-11-25
+
 ### Changed
 
 - Rebuilt on Debian `13.8` (`debian:trixie-slim`) with nextcloud-spreed-signaling `v2.2.0`, go `1.27.4`.
