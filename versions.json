@@ -24,9 +24,9 @@
   "base_digest": "sha256:8aa5a7bf5a1955bddbe7d74fcdd0b91ab30e74362a8b73af672b0481b35b44a0",
   "debian_version": "13.8",
   "build_date": "2026-11-25",
-  "built_at_utc": "2026-11-25T12:33:13Z",
-  "image_digest": "dgcosenza/nextcloud-spreed-signaling@sha256:aa8d71de5ec206c5efc51986dda8fe12387f035612b5e98cf9e40c406f352f3a",
-  "ghcr_digest": "ghcr.io/dgcosenza/nextcloud-spreed-signaling@sha256:aa8d71de5ec206c5efc51986dda8fe12387f035612b5e98cf9e40c406f352f3a",
+  "built_at_utc": "2026-11-25T16:35:38Z",
+  "image_digest": "dgcosenza/nextcloud-spreed-signaling@sha256:61375db8ec6cc767513504be6f946c00094eebd05b3b93a61b310520c7189272",
+  "ghcr_digest": "ghcr.io/dgcosenza/nextcloud-spreed-signaling@sha256:61375db8ec6cc767513504be6f946c00094eebd05b3b93a61b310520c7189272",
   "fixable_critical_high": 0,
   "unfixed_cves": [
     "CVE-2025-69720",
