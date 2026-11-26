@@ -46,6 +46,7 @@ RUN git clone --depth 1 --branch "${SIGNALING_VERSION}" \
         https://github.com/strukturag/nextcloud-spreed-signaling.git . \
     && patch -p1 < /tmp/0001-debian-setpriv.patch \
     && touch /.dockerenv \
+    && go get golang.org/x/sys@v0.50.0 \
     && CGO_ENABLED=0 GOOS="${TARGETOS:-linux}" GOARCH="${TARGETARCH:-amd64}" make server
 
 # ---- Stage 2: fully upgraded Debian 13 runtime OS layer --------------------
