@@ -26,7 +26,7 @@ A source-built, multi-arch, rootless **Debian 13 (`trixie-slim`)** container ima
 
 - **Drop-in replacement for `strukturag/nextcloud-spreed-signaling`:** Preserves `CONFIG=/config/server.conf`, `/config/server.conf.in`, `/entrypoint.sh`, `/stop.sh`, `/wait.sh`, `STOPSIGNAL SIGUSR1`, `spreedbackend` (`850:850`), all upstream environment variables, and the `wget` healthcheck.
 - **Rootless & read-only rootfs ready:** Defaults to `USER spreedbackend` (`850:850`) under `tini`, and is verified natively on both architectures under `--read-only --cap-drop ALL --security-opt no-new-privileges:true` (using `CONFIG=/tmp/server.conf` on `tmpfs`).
-- **Hardened supply chain:** Hadolint + Gitleaks preflight, native multi-arch smoke tests, strict Dive efficiency gate (`>= 95%`, `<= 5%` wasted), Syft SPDX + CycloneDX SBOMs, Trivy + Grype (SBOM) zero-fixable High/Critical gates, Cosign keyless OIDC signatures & SBOM attestations, SLSA Build L3 provenance, dual-registry publishing, and signed GitHub Releases.
+- **Hardened supply chain:** Hadolint + Gitleaks preflight, native multi-arch smoke tests, strict Dive efficiency gate (`>= 95%`, `<= 5%` wasted), Syft SPDX + CycloneDX SBOMs, Trivy + Grype (SBOM) zero-fixable all-severity gates, Cosign keyless OIDC signatures & SBOM attestations, SLSA Build L3 provenance, dual-registry publishing, and signed GitHub Releases.
 
 ---
 
@@ -214,7 +214,7 @@ gh attestation verify oci://ghcr.io/dgcosenza/nextcloud-spreed-signaling:latest 
 - **Preflight gates:** Every push and PR runs **Hadolint** (blocking on warning+), **Gitleaks** secret scanning across git history, and **public-content/attribution/license** checks.
 - **Patched Go builds:** Compiled daily from official upstream tags with `CGO_ENABLED=0` and the newest Go `trixie` toolchain (`GOTOOLCHAIN=local`).
 - **Rootless & read-only ready:** Defaults to `spreedbackend` (`850:850`) under `tini`, verified with `--read-only --cap-drop ALL --security-opt no-new-privileges:true`.
-- **Vulnerability & efficiency gates (all severities with a fix):** Each architecture generates **Syft** SPDX + CycloneDX SBOMs, passes a strict **Dive** efficiency gate (`>= 95%`, `<= 5%` wasted), and must pass **Trivy** (table, JSON, SARIF to Code Scanning, blocking `--ignore-unfixed`) and **Grype** scanning the SPDX SBOM (`--only-fixed --fail-on negligible`) with **0 fixable findings of any severity** vulnerabilities.
+- **Vulnerability & efficiency gates (all severities with a fix):** Each architecture generates **Syft** SPDX + CycloneDX SBOMs, passes a strict **Dive** efficiency gate (`>= 95%`, `<= 5%` wasted), and must pass **Trivy** (table, JSON, SARIF to Code Scanning, blocking `--ignore-unfixed`) and **Grype** scanning the SPDX SBOM (`--only-fixed --fail-on negligible`) with **0 fixable vulnerabilities of any severity**.
 - **Dependency automation:** Renovate (`renovate.json`) pins base image digests and GitHub Action commit SHAs; Dependabot security alerts and OpenSSF Scorecard monitoring are enabled.
 - See [`SECURITY.md`](https://github.com/dgcosenza/nextcloud-spreed-signaling-docker/blob/main/SECURITY.md) for vulnerability reporting.
 
