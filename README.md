@@ -44,7 +44,7 @@ A source-built, multi-arch, rootless **Debian 13 (`trixie-slim`)** container ima
 | Published multi-arch digest | `dgcosenza/nextcloud-spreed-signaling@sha256:a35f13d103630f8d116f52e25ae17f81e00284e176eda2812c9cd12f4d32c9f3` |
 | GHCR mirror | `ghcr.io/dgcosenza/nextcloud-spreed-signaling@sha256:a35f13d103630f8d116f52e25ae17f81e00284e176eda2812c9cd12f4d32c9f3` |
 | Supply chain | Cosign OIDC signed + SPDX & CycloneDX SBOM attestations + SLSA Build L3 provenance |
-| Security gate (Trivy + Grype on SBOM) | **0 fixable Critical/High** (15 upstream-unfixed) |
+| Security gate (Trivy + Grype on SBOM) | **0 fixable findings of any severity** (15 upstream-unfixed) |
 
 Currently tracked upstream-unfixed findings (no fix released): `CVE-2025-69720`, `CVE-2026-107494`, `CVE-2026-119373`, `CVE-2026-119374`, `CVE-2026-119379`, `CVE-2026-124709`, `CVE-2026-16742`, `CVE-2026-54369`, `CVE-2026-58471`, `CVE-2026-58472` (+5 more in CI artifacts).
 <!-- versions:end -->
@@ -214,7 +214,7 @@ gh attestation verify oci://ghcr.io/dgcosenza/nextcloud-spreed-signaling:latest 
 - **Preflight gates:** Every push and PR runs **Hadolint** (blocking on warning+), **Gitleaks** secret scanning across git history, and **public-content/attribution/license** checks.
 - **Patched Go builds:** Compiled daily from official upstream tags with `CGO_ENABLED=0` and the newest Go `trixie` toolchain (`GOTOOLCHAIN=local`).
 - **Rootless & read-only ready:** Defaults to `spreedbackend` (`850:850`) under `tini`, verified with `--read-only --cap-drop ALL --security-opt no-new-privileges:true`.
-- **Vulnerability & efficiency gates:** Each architecture generates **Syft** SPDX + CycloneDX SBOMs, passes a strict **Dive** efficiency gate (`>= 95%`, `<= 5%` wasted), and must pass **Trivy** (table, JSON, SARIF to Code Scanning, blocking `--ignore-unfixed`) and **Grype** scanning the SPDX SBOM (`--only-fixed --fail-on high`) with **0 fixable Critical/High** vulnerabilities.
+- **Vulnerability & efficiency gates (all severities with a fix):** Each architecture generates **Syft** SPDX + CycloneDX SBOMs, passes a strict **Dive** efficiency gate (`>= 95%`, `<= 5%` wasted), and must pass **Trivy** (table, JSON, SARIF to Code Scanning, blocking `--ignore-unfixed`) and **Grype** scanning the SPDX SBOM (`--only-fixed --fail-on negligible`) with **0 fixable findings of any severity** vulnerabilities.
 - **Dependency automation:** Renovate (`renovate.json`) pins base image digests and GitHub Action commit SHAs; Dependabot security alerts and OpenSSF Scorecard monitoring are enabled.
 - See [`SECURITY.md`](https://github.com/dgcosenza/nextcloud-spreed-signaling-docker/blob/main/SECURITY.md) for vulnerability reporting.
 
@@ -253,7 +253,7 @@ docker buildx build \
 
 1. **Preflight & upstream check:** Runs public-content checks, **Hadolint**, and **Gitleaks**; resolves the latest `strukturag/nextcloud-spreed-signaling` release via authenticated GitHub API plus latest Go `trixie` and `debian:trixie-slim` digests; diffs against `versions.json` and emits `upstream-changes.md`.
 2. **Multi-arch no-cache rebuild:** Compiles static Go binaries natively on `linux/amd64` and `linux/arm64` runners with `--no-cache` on schedule and full Debian 13 `apt-get upgrade`.
-3. **Smoke, Dive & vulnerability gates:** Runs [`tests/smoke.sh`](https://github.com/dgcosenza/nextcloud-spreed-signaling-docker/blob/main/tests/smoke.sh) natively on both architectures (default + `--read-only --cap-drop ALL`, `/api/v1/welcome`, graceful `/stop.sh` `SIGUSR1`), enforces the strict **Dive** efficiency gate (`>= 95%`, `<= 5%` wasted), generates **Syft** SPDX + CycloneDX SBOMs, and gates publication on **0 fixable Critical/High** in both **Trivy** and **Grype** (SBOM scan).
+3. **Smoke, Dive & vulnerability gates:** Runs [`tests/smoke.sh`](https://github.com/dgcosenza/nextcloud-spreed-signaling-docker/blob/main/tests/smoke.sh) natively on both architectures (default + `--read-only --cap-drop ALL`, `/api/v1/welcome`, graceful `/stop.sh` `SIGUSR1`), enforces the strict **Dive** efficiency gate (`>= 95%`, `<= 5%` wasted), generates **Syft** SPDX + CycloneDX SBOMs, and gates publication on **0 fixable findings of any severity** in both **Trivy** and **Grype** (SBOM scan).
 4. **Dual-registry publish & signing:** Assembles the multi-arch OCI index on **GHCR** (`ghcr.io/dgcosenza/nextcloud-spreed-signaling`) and mirrors the identical digest to **Docker Hub** (`dgcosenza/nextcloud-spreed-signaling`) with tags `latest`, `<version>`, `<version>-<YYYYMMDD>`, and `sha-<short>`; keyless-signs digests and attaches SPDX/CycloneDX SBOM attestations via **Cosign** OIDC; emits **SLSA Build L3** provenance; and publishes a signed **GitHub Release**.
 5. **Automated documentation sync:** Commits updated `versions.json`, the README `Current Versions` block, and a dated `CHANGELOG.md` entry via `github-actions[bot]` (`[skip ci]`), then syncs the Docker Hub overview and short description.
 6. **Failure alerting:** Opens or updates a single GitHub issue labeled `ci-failure` on any `main` or scheduled failure, and closes it automatically on the next green run.
