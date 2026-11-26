@@ -47,6 +47,7 @@ RUN git clone --depth 1 --branch "${SIGNALING_VERSION}" \
     && patch -p1 < /tmp/0001-debian-setpriv.patch \
     && touch /.dockerenv \
     && go get golang.org/x/sys@v0.50.0 \
+    && go get golang.org/x/crypto@v0.59.0 \
     && CGO_ENABLED=0 GOOS="${TARGETOS:-linux}" GOARCH="${TARGETARCH:-amd64}" make server
 
 # ---- Stage 2: fully upgraded Debian 13 runtime OS layer --------------------
