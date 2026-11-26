@@ -41,8 +41,8 @@ A source-built, multi-arch, rootless **Debian 13 (`trixie-slim`)** container ima
 | Architectures | `linux/amd64, linux/arm64` |
 | Compressed size (per arch) | `amd64: 53.0 MB, arm64: 52.1 MB` |
 | Last verified build (UTC) | `2026-11-26` |
-| Published multi-arch digest | `dgcosenza/nextcloud-spreed-signaling@sha256:23fcd6adfc671471ef586b62a6e3d70a5b9066f93497adc4c387a99fc30a1dac` |
-| GHCR mirror | `ghcr.io/dgcosenza/nextcloud-spreed-signaling@sha256:23fcd6adfc671471ef586b62a6e3d70a5b9066f93497adc4c387a99fc30a1dac` |
+| Published multi-arch digest | `dgcosenza/nextcloud-spreed-signaling@sha256:effbabd5097b21b09ef339bb68f133846199430a754e833ad068d8a00292cc2d` |
+| GHCR mirror | `ghcr.io/dgcosenza/nextcloud-spreed-signaling@sha256:effbabd5097b21b09ef339bb68f133846199430a754e833ad068d8a00292cc2d` |
 | Supply chain | Cosign OIDC signed + SPDX & CycloneDX SBOM attestations + SLSA Build L3 provenance |
 | Security gate (Trivy + Grype on SBOM) | **0 fixable findings of any severity** (15 upstream-unfixed) |
 
