@@ -6,6 +6,15 @@ All notable changes to this image are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and image tags track
 the upstream `strukturag/nextcloud-spreed-signaling` release version.
 
+## [2.2.0] - 2026-11-28
+
+### Automated Daily Build
+- Verified components: nextcloud-spreed-signaling `v2.2.0`, Go toolchain `1.27.4`, Base OS `Debian 13.8 (trixie-slim)`.
+- Architectures verified: `linux/amd64, linux/arm64` (native smoke tests + Dive efficiency gate).
+- Upstream status: refreshed base OS, dependencies, and supply-chain attestations.
+- Vulnerability gate: **0 fixable findings of any severity** in Trivy and Grype (SBOM scan) (15 upstream-unfixed).
+- Published multi-arch digest (Docker Hub + GHCR): `dgcosenza/nextcloud-spreed-signaling@sha256:9ac06c42e50fdf4e2a58635274cd9817a14916df8326ee15254280c750697a74` (Cosign OIDC signed + SPDX/CycloneDX SBOM + SLSA L3 provenance).
+
 ## [2.2.0] - 2026-11-27
 
 ### Automated Daily Build
